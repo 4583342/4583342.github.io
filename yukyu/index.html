@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>有給の日数計算｜パートの比例付与・消える日も自動で</title>
+<meta name="description" content="入社日と週の勤務日数を入れるだけで、有給休暇がいつ何日もらえて、いつ消えるかを自動で計算。パート・アルバイトの比例付与、年5日の取得義務にも対応した無料ツールです。">
+<link rel="canonical" href="https://4583342.github.io/yukyu/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="従業員の味方">
+<meta property="og:title" content="有給の日数計算｜パートの比例付与・消える日も自動で">
+<meta property="og:description" content="入社日と週の勤務日数を入れるだけで、有給休暇がいつ何日もらえて、いつ消えるかを自動で計算。パート・アルバイトの比例付与、年5日の取得義務にも対応した無料ツールです。">
+<meta property="og:url" content="https://4583342.github.io/yukyu/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="apple-itunes-app" content="app-id=6808507726">
+<meta name="theme-color" content="#165e4f">
+<link rel="stylesheet" href="../style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"従業員の味方","item":"https://4583342.github.io/"},{"@type":"ListItem","position":2,"name":"有給の日数計算（パート・アルバイト対応）","item":"https://4583342.github.io/yukyu/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"MobileApplication","name":"従業員の味方（有給管理）","description":"入社日を入れるだけで、有給の残り日数と消える日、年5日の取得義務の進み具合を自動で管理。期限が近づくと通知します。","operatingSystem":"iOS, Android","applicationCategory":"BusinessApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"installUrl":"https://apps.apple.com/jp/app/id6808507726","sameAs":["https://apps.apple.com/jp/app/id6808507726","https://play.google.com/store/apps/details?id=com.mikata.paidleaveapp"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"パートでも有給はもらえますか？","acceptedAnswer":{"@type":"Answer","text":"はい。入社して6か月たち、決められた日の8割以上出勤していれば、パート・アルバイトでももらえます。日数は週の勤務日数と時間で決まります。"}},{"@type":"Question","name":"有給を取るのに理由を言う必要はありますか？","acceptedAnswer":{"@type":"Answer","text":"原則として、理由を言う必要はありません。会社ができるのは、事業の正常な運営を妨げる場合に、別の日に変えてもらうこと（時季変更権）です。"}},{"@type":"Question","name":"週の勤務日数が途中で変わったら？","acceptedAnswer":{"@type":"Answer","text":"付与日数は、付与される日の時点の所定労働日数で決まるのが基本です。変わった後の日数で計算し直してください。"}},{"@type":"Question","name":"退職する前に残りの有給はどうなりますか？","acceptedAnswer":{"@type":"Answer","text":"退職日までに使うことができます。退職すると残りは消えるので、早めに残日数を確かめて、会社と相談しましょう。"}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="logo" href="../">従業員の味方</a><nav><a href="../yukyu/">有給の日数計算</a><a href="../zangyo/">残業代の計算</a><a href="../kojo/">控除の見方</a><a href="../pawahara/">パワハラの記録</a></nav></div></header>
+<main><div class="wrap">
+<p class="crumb"><a href="../">従業員の味方</a> › 有給の日数計算（パート・アルバイト対応）</p><h1>有給の日数計算（パート・アルバイト対応）</h1>
+<p class="lead">入社日と、週に働く日数を入れるだけ。いつ・何日の有給がもらえて、いつ消えるかを一覧にします。パート・アルバイトの比例付与にも対応しています。</p>
+
+<div class="card tool" id="tool">
+  <label for="hire">入社日</label>
+  <input type="date" id="hire" required>
+  <label for="days">週に働く日数（所定労働日数）<span class="hint">　曜日が決まっていない人は、1年間の勤務日数で選んでください</span></label>
+  <select id="days">
+    <option value="5">週5日以上（年217日以上）</option>
+    <option value="4">週4日（年169〜216日）</option>
+    <option value="3">週3日（年121〜168日）</option>
+    <option value="2">週2日（年73〜120日）</option>
+    <option value="1">週1日（年48〜72日）</option>
+  </select>
+  <label class="check"><input type="checkbox" id="h30"> 週の所定労働時間が30時間以上（チェックすると、日数に関係なく正社員と同じ日数になります）</label>
+  <button class="go" type="button" id="calc">計算する</button>
+  <div class="result" id="out" aria-live="polite"></div>
+</div>
+<p class="note">入力したことは、このページの中だけで計算し、どこにも送りません。前提：決められた勤務日の8割以上出勤していること。会社が「基準日」をそろえてまとめて付与している場合や、法律より多く付与している場合は、日付や日数が変わります。</p>
+
+<h2>有給がもらえる条件</h2>
+<p>正社員でも、パート・アルバイトでも、次の2つを満たせば有給休暇がもらえます（労働基準法39条）。</p>
+<ol>
+  <li>入社してから6か月たっている</li>
+  <li>決められた勤務日の8割以上出勤している</li>
+</ol>
+<p>その後は1年ごとに、勤続年数に応じて日数が増えます。「バイトだから有給は無い」ということは、法律上ありません。</p>
+
+<h2>付与日数の早見表</h2>
+<h3>週5日以上、または週30時間以上の人</h3>
+<div class="tbl"><table>
+  <thead><tr><th>勤続</th><th class="num">6か月</th><th class="num">1年6か月</th><th class="num">2年6か月</th><th class="num">3年6か月</th><th class="num">4年6か月</th><th class="num">5年6か月</th><th class="num">6年6か月以上</th></tr></thead>
+  <tbody><tr><td>日数</td><td class="num">10</td><td class="num">11</td><td class="num">12</td><td class="num">14</td><td class="num">16</td><td class="num">18</td><td class="num">20</td></tr></tbody>
+</table></div>
+<h3>週4日以下で、週30時間未満の人（比例付与）</h3>
+<div class="tbl"><table>
+  <thead><tr><th>週の日数</th><th class="num">6か月</th><th class="num">1年6か月</th><th class="num">2年6か月</th><th class="num">3年6か月</th><th class="num">4年6か月</th><th class="num">5年6か月</th><th class="num">6年6か月以上</th></tr></thead>
+  <tbody>
+    <tr><td>週4日</td><td class="num">7</td><td class="num">8</td><td class="num">9</td><td class="num">10</td><td class="num">12</td><td class="num">13</td><td class="num">15</td></tr>
+    <tr><td>週3日</td><td class="num">5</td><td class="num">6</td><td class="num">6</td><td class="num">8</td><td class="num">9</td><td class="num">10</td><td class="num">11</td></tr>
+    <tr><td>週2日</td><td class="num">3</td><td class="num">4</td><td class="num">4</td><td class="num">5</td><td class="num">6</td><td class="num">6</td><td class="num">7</td></tr>
+    <tr><td>週1日</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">2</td><td class="num">3</td><td class="num">3</td><td class="num">3</td></tr>
+  </tbody>
+</table></div>
+
+<h2>有給は2年で消える</h2>
+<p>もらった有給は、2年たつと時効で消えます。去年もらった分が残っている人は、いつ消えるかを一度確かめておきましょう。上の計算では「消える日」の列に目安を出しています。</p>
+
+<h2>年5日の取得義務</h2>
+<p>1回に10日以上の有給をもらう人には、会社が、もらった日から1年以内に5日を取らせる義務があります（2019年4月から）。週3日・週4日のパートでも、勤続が長くなって10日以上になれば対象です。計算結果で「年5日の義務」に印が付いている年が対象です。</p>
+
+<aside class="app"><b>従業員の味方（有給管理）</b><span>入社日を入れるだけで、有給の残り日数と消える日、年5日の取得義務の進み具合を自動で管理。期限が近づくと通知します。</span><span class="note">無料（広告あり）。記録はスマホの中だけに保存されます。</span><div class="stores"><a href="https://apps.apple.com/jp/app/id6808507726" rel="noopener">App Store</a><a href="https://play.google.com/store/apps/details?id=com.mikata.paidleaveapp&referrer=utm_source%3Dwebsite%26utm_medium%3Dyukyu" rel="noopener">Google Play</a></div></aside>
+
+<h2>よくある質問</h2>
+<details><summary>パートでも有給はもらえますか？</summary><p>はい。入社して6か月たち、決められた日の8割以上出勤していれば、パート・アルバイトでももらえます。日数は週の勤務日数と時間で決まります。</p></details>
+<details><summary>有給を取るのに理由を言う必要はありますか？</summary><p>原則として、理由を言う必要はありません。会社ができるのは、事業の正常な運営を妨げる場合に、別の日に変えてもらうこと（時季変更権）です。</p></details>
+<details><summary>週の勤務日数が途中で変わったら？</summary><p>付与日数は、付与される日の時点の所定労働日数で決まるのが基本です。変わった後の日数で計算し直してください。</p></details>
+<details><summary>退職する前に残りの有給はどうなりますか？</summary><p>退職日までに使うことができます。退職すると残りは消えるので、早めに残日数を確かめて、会社と相談しましょう。</p></details>
+
+<script>
+(() => {
+  const FULL = [10, 11, 12, 14, 16, 18, 20];
+  const PROP = { 4: [7, 8, 9, 10, 12, 13, 15], 3: [5, 6, 6, 8, 9, 10, 11], 2: [3, 4, 4, 5, 6, 6, 7], 1: [1, 2, 2, 2, 3, 3, 3] };
+  const $ = (id) => document.getElementById(id);
+  const addMonths = (d, m) => { const r = new Date(d.getFullYear(), d.getMonth() + m, 1); const last = new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate(); r.setDate(Math.min(d.getDate(), last)); return r; };
+  const fmt = (d) => `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  const fs = (d) => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  $('hire').value = (() => { const d = addMonths(today, -18); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
+  $('calc').addEventListener('click', () => {
+    const v = $('hire').value; const out = $('out');
+    if (!v) { out.innerHTML = '<p class="warn">入社日を入れてください。</p>'; return; }
+    const [y, m, d] = v.split('-').map(Number); const hire = new Date(y, m - 1, d);
+    const days = Number($('days').value); const full = days === 5 || $('h30').checked;
+    const table = full ? FULL : PROP[days];
+    const rows = []; let current = null; let total = 0;
+    const years = Math.max(8, Math.ceil((today - hire) / 31557600000) + 2);
+    for (let i = 0; i < years; i++) {
+      const grant = addMonths(hire, 6 + 12 * i); const expire = addMonths(grant, 24); expire.setDate(expire.getDate() - 1);
+      const n = table[Math.min(i, 6)];
+      const state = expire < today ? 'past' : grant <= today ? 'now' : 'future';
+      if (state === 'now') { current = current || []; current.push({ grant, n, expire }); total += n; }
+      rows.push(`<tr class="${state === 'past' ? 'past' : state === 'now' ? 'now' : ''}"><td>${fs(grant)}</td><td class="num">${n}日</td><td>${fs(expire)}</td><td>${n >= 10 ? '対象' : '―'}</td></tr>`);
+    }
+    const next = rows.length && addMonths(hire, 6) > today ? `<p>最初の有給は <b>${fmt(addMonths(hire, 6))}</b> に <b>${table[0]}日</b> もらえる見込みです。</p>` : '';
+    const head = current ? `<p>今、有効な有給は最大 <span class="big">${total}日</span>（使った日数を引く前）</p>${current.map((c) => `<p class="note">${fmt(c.grant)}にもらった${c.n}日 → ${fmt(c.expire)}まで</p>`).join('')}` : next;
+    out.innerHTML = `${head}<div class="tbl"><table><thead><tr><th>もらえる日</th><th class="num">日数</th><th>消える日</th><th>年5日</th></tr></thead><tbody>${rows.join('')}</tbody></table></div><p class="note">色の付いた行が今使える分、薄い行は消えた分です。消える日は目安です。「年5日」が対象の年は、会社が5日を取らせる義務があります。${full ? '正社員と同じ日数で計算しました。' : `週${days}日の比例付与で計算しました。`}</p>`;
+  });
+})();
+</script>
+
+<p class="note">最終更新：2026年11月21日。内容は法律の一般的な説明で、個別の判断ではありません。くわしくは労働基準監督署・総合労働相談コーナー・弁護士などにご相談ください。</p>
+</div></main>
+<footer><div class="wrap">© 従業員の味方　<a href="../">トップ</a>　<a href="../yukyu/">有給の日数計算</a>　<a href="../zangyo/">残業代の計算</a>　<a href="../kojo/">控除の見方</a>　<a href="../pawahara/">パワハラの記録</a></div></footer>
+</body>
+</html>
