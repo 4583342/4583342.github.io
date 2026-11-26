@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- X の簡易投稿の中継ページ（scripts/x-post/notify.cjs の通知から開く）。Discord の中のブラウザでは X アプリが開かないので、ここから X アプリの投稿画面を開く。
+     ?t=投稿文&u=リンク（u は省略可）。検索には出さない（noindex） -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>X で投稿する</title>
+<style>
+  body{margin:0;font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;background:#f4f6f5;color:#1b1f1e}
+  main{max-width:520px;margin:0 auto;padding:24px 16px}
+  h1{font-size:20px;margin:0 0 12px}
+  pre{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid #d9dfdc;border-radius:12px;padding:14px;font:15px/1.6 inherit;margin:0 0 16px}
+  a.btn{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:17px;border-radius:999px;padding:14px;margin:0 0 12px}
+  .app{background:#000;color:#fff}
+  .web{background:#fff;color:#000;border:1px solid #000}
+  p{font-size:13px;color:#5b6461;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+  <h1>X で投稿する</h1>
+  <pre id="text"></pre>
+  <a class="btn app" id="app" href="#">X アプリで開く</a>
+  <a class="btn web" id="web" href="#">ブラウザで開く</a>
+  <p>アプリが開かないときは「ブラウザで開く」を押してください。Discord の設定で「アプリ内ブラウザ」を切ると、次からは直接開きやすくなります。</p>
+</main>
+<script>
+  var q = new URLSearchParams(location.search);
+  var t = q.get('t') || '', u = q.get('u') || '';
+  var full = u ? t + '\n' + u : t;
+  document.getElementById('text').textContent = full;
+  var app = 'twitter://post?message=' + encodeURIComponent(full);
+  var web = 'https://x.com/intent/post?text=' + encodeURIComponent(t) + (u ? '&url=' + encodeURIComponent(u) : '');
+  document.getElementById('app').href = app;
+  document.getElementById('web').href = web;
+  if (t) location.href = app; // 開いたらすぐ X アプリへ（だめなら上のボタン）
+</script>
+</body>
+</html>
